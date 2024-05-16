@@ -5,7 +5,7 @@ try {
     $table_id_account = $_POST['table_id'];
 
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $stmt = $conn->prepare('SELECT order_items.id,orders.id as orderId,orders.code,orders.dateTime, orders.table_id, orders.user_id, order_items.quantity, order_items.price as totalPrice, products.name, products.price,products.id as product_id
+    $stmt = $conn->prepare('SELECT order_items.id,orders.id as orderId,orders.code,orders.dateTime, orders.table_id, orders.user_id, order_items.quantity, order_items.price as totalPrice, products.name, products.price,products.id as product_id, products.product_code
     FROM orders
     JOIN order_items ON orders.id = order_items.order_id
     JOIN products ON order_items.product_id = products.id
@@ -28,7 +28,8 @@ try {
         $name = $row['name'];
         $price = $row['price'];
         $product_id = $row['product_id'];
-        array_push($mang, new Orders($id, $orderId, $code, $dateTime, $table_id, $user_id, $quantity, $totalPrice, $name, $price, $product_id));
+        $product_code = $row['product_code'];
+        array_push($mang, new Orders($id, $orderId, $code, $dateTime, $table_id, $user_id, $quantity, $totalPrice, $name, $price, $product_id, $product_code));
     }
 
     echo json_encode($mang);
@@ -49,8 +50,9 @@ class Orders
     public $name;
     public $price;
     public $product_id;
+    public $product_code;
 
-    public function __construct($id, $orderId, $code, $dateTime, $table_id, $user_id, $quantity, $totalPrice, $name, $price, $product_id)
+    public function __construct($id, $orderId, $code, $dateTime, $table_id, $user_id, $quantity, $totalPrice, $name, $price, $product_id, $product_code)
     {
         $this->id = $id;
         $this->orderId = $orderId;
@@ -63,6 +65,6 @@ class Orders
         $this->name = $name;
         $this->price = $price;
         $this->product_id = $product_id;
+        $this->product_code = $product_code;
     }
 }
-    
