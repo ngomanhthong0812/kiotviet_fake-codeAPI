@@ -7,36 +7,36 @@ try {
     $shop_name = $_POST['name_shop'];
     $user_name = $_POST['name_user'];
     $password = $_POST['password'];
-    $role = "order";
+    $role = "admin";
+
+    // Thêm cửa hàng mới với ID của người dùng
+    $stmtShop = $conn->prepare("INSERT INTO shops (name) VALUES (:name)");
+    $stmtShop->bindParam(':name', $shop_name);
+    $stmtShop->execute();
+
+    // Lấy ID của shop vừa thêm vào cơ sở dữ liệu
+    $shop_id = $conn->lastInsertId();
 
     // Thêm người dùng mới
-    $stmtUser = $conn->prepare("INSERT INTO users (name, password, role) VALUES (:name, :password, :role)");
+    $stmtUser = $conn->prepare("INSERT INTO users (name, password, role,shop_id) VALUES (:name, :password, :role,:shop_id)");
     $stmtUser->bindParam(':name', $user_name);
     $stmtUser->bindParam(':password', $password);
     $stmtUser->bindParam(':role', $role);
+    $stmtUser->bindParam(':shop_id', $shop_id);
     $stmtUser->execute();
 
     // Lấy ID của người dùng vừa thêm vào cơ sở dữ liệu
     $user_id = $conn->lastInsertId();
 
-    // Tạo 50 bàn cho người dùng mới
-    for ($i = 0; $i <= 50; $i++) {
-        if ($i == 0) {
-            $table_name = "Mang về ";
-        } else {
-            $table_name = "BÀN " . $i;
-        }
-        $stmtTable = $conn->prepare("INSERT INTO tables (table_name, status, user_id, table_price) VALUES (:table_name, 0, :user_id, 0)");
-        $stmtTable->bindParam(':table_name', $table_name);
-        $stmtTable->bindParam(':user_id', $user_id);
-        $stmtTable->execute();
-    }
 
-    // Thêm cửa hàng mới với ID của người dùng
-    $stmtShop = $conn->prepare("INSERT INTO shops (name, user_id) VALUES (:name, :user_id)");
-    $stmtShop->bindParam(':name', $shop_name);
-    $stmtShop->bindParam(':user_id', $user_id);
-    $stmtShop->execute();
+    // Tạo 1 bàn cho người dùng mới
+    $table_name = "Mang về ";
+    $stmtTable = $conn->prepare("INSERT INTO tables (table_name, status, user_id, table_price,shop_id) VALUES (:table_name, 0, :user_id, 0,:shop_id)");
+    $stmtTable->bindParam(':table_name', $table_name);
+    $stmtTable->bindParam(':user_id', $user_id);
+    $stmtTable->bindParam(':shop_id', $shop_id);
+    $stmtTable->execute();
+
 
     echo "Insert data successful";
 } catch (PDOException $pe) {

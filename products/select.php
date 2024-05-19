@@ -2,9 +2,15 @@
 require "../dbConnect.php";
 
 try {
+    $shop_id_account = $_POST['shop_id'];
 
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $stmt = $conn->prepare('SELECT PRODUCTS.id, PRODUCTS.name AS product_name, PRODUCTS.price, PRODUCTS.quantity, PRODUCTS.categories_id, CATEGORIES.name AS categories_name, PRODUCTS.product_code FROM PRODUCTS INNER JOIN CATEGORIES ON PRODUCTS.categories_id = CATEGORIES.id');
+    $stmt = $conn->prepare('SELECT PRODUCTS.id, PRODUCTS.name AS product_name, 
+    PRODUCTS.price, PRODUCTS.quantity, PRODUCTS.categories_id, CATEGORIES.name AS categories_name,
+    PRODUCTS.product_code FROM PRODUCTS INNER JOIN CATEGORIES ON PRODUCTS.categories_id = CATEGORIES.id
+    WHERE CATEGORIES.shop_id = :shop_id_account;');
+
+    $stmt->bindParam(':shop_id_account', $shop_id_account);
     $stmt->execute();
     $mang = array();
 

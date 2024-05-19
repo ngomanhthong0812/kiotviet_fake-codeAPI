@@ -2,11 +2,11 @@
 require "../dbConnect.php";
 
 try {
-
+// sửa lại trên member5
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $stmt = $conn->prepare('SELECT shops.id AS shop_id, shops.user_id, shops.name AS restaurant_name, users.name AS user_name, users.password, users.role 
+    $stmt = $conn->prepare('SELECT shops.id AS shop_id, users.id AS user_id, shops.name AS restaurant_name, users.name AS user_name, users.password, users.role 
     FROM shops
-    INNER JOIN users ON shops.user_id = users.id;');
+    INNER JOIN users ON shops.id = users.shop_id;');
     $stmt->execute();
     $mang = array();
 

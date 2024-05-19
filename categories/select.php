@@ -2,9 +2,12 @@
 require "../dbConnect.php";
 
 try {
+    $shop_id_account = $_POST['shop_id'];
 
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $stmt = $conn->prepare('SELECT * from CATEGORIES');
+    $stmt = $conn->prepare('SELECT * from CATEGORIES WHERE shop_id = :shop_id_account');
+
+    $stmt->bindParam(':shop_id_account', $shop_id_account);
     $stmt->execute();
     $mang = array();
 

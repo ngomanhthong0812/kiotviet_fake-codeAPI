@@ -2,8 +2,12 @@
 require "../dbConnect.php";
 
 try {
+    $shop_id_account = $_POST['shop_id'];
+
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $stmt = $conn->prepare('SELECT * FROM BILLS');
+    $stmt = $conn->prepare('SELECT BILLS.* FROM BILLS JOIN USERS ON BILLS.user_id = USERS.id WHERE USERS.shop_id = :shop_id_account;');
+
+    $stmt->bindParam(':shop_id_account', $shop_id_account);
     $stmt->execute();
     $billArray = array();
 

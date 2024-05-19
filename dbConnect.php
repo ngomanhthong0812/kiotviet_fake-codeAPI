@@ -1,8 +1,8 @@
 <?php
-$host = 'mysql5026.site4now.net';
-$dbname = 'db_aa6c53_kiotvi';
-$username = 'aa6c53_kiotvi';
-$password = 'tomtom0812';
+$host = 'mysql8010.site4now.net';
+$dbname = 'db_aa8e67_kiotvi';
+$username = 'aa8e67_kiotvi';
+$password = 'gaycoffee123';
 
 try {
 
