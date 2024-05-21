@@ -22,11 +22,14 @@ class Bill
 }
 
 try {
+    $bill_id_post = $_POST['bill_id_post'];
+
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $stmt = $conn->prepare('SELECT bill_items.id AS bill_item_id, bill_items.quantity, bill_items.total_price, bill_items.product_id, bill_items.bill_id, products.name AS product_name
-    FROM bill_items 
-    INNER JOIN products ON bill_items.product_id = products.id 
-    INNER JOIN bills ON bill_items.bill_id = bills.id');
+    $stmt = $conn->prepare('SELECT bill_items.id AS bill_item_id, bill_items.quantity, bill_items.total_price, bill_items.product_id, bill_items.bill_id, bill_items.product_name
+    FROM bill_items, bills WHERE bill_items.bill_id = bills.id AND bill_items.bill_id = :bill_id_post;');
+
+    $stmt->bindParam(':bill_id_post', $bill_id_post);
+
     $stmt->execute();
     $bills = array();
 
@@ -44,4 +47,3 @@ try {
 } catch (PDOException $pe) {
     die("Could not connect to the database $dbname: " . $pe->getMessage());
 }
-?>

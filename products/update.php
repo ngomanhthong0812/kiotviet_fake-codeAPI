@@ -7,10 +7,10 @@ try {
     $id = $_POST['id'];
     $name = $_POST['name'];
     $price = $_POST['price'];
-    $quanity = $_POST['quanity'];
+    $quantity = $_POST['quantity'];
     $categories_id = $_POST['categories_id'];
 
-    $stmt = $conn->prepare('update PRODUCTS set NAME = :name, PRICE = :price, QUANTITY = :quanity, CATEGORIES_ID = :categories_id, where ID = :id');
+    $stmt = $conn->prepare('update PRODUCTS set NAME = :name, PRICE = :price, QUANTITY = :quantity, CATEGORIES_ID = :categories_id where ID = :id;');
 
     $stmt->bindParam(':id', $id);
     $stmt->bindParam(':name', $name);

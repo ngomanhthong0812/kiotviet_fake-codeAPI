@@ -6,13 +6,15 @@ try {
     $quantity = $_POST['quantity'];
     $total_price = $_POST['total_price'];
     $product_id = $_POST['product_id'];
+    $product_name = $_POST['product_name'];
     $bill_id = $_POST['bill_id'];
 
-    $stmt = $conn->prepare('INSERT INTO BILL_ITEMS (`quantity`, `total_price`, `product_id`, `bill_id`) VALUES (:quantity, :total_price, :product_id, :bill_id)');
+    $stmt = $conn->prepare('INSERT INTO BILL_ITEMS (`quantity`, `total_price`, `product_id`, `product_name`, `bill_id`) VALUES (:quantity, :total_price, :product_id, :product_name, :bill_id)');
 
     $stmt->bindParam(':quantity', $quantity);
     $stmt->bindParam(':total_price', $total_price);
     $stmt->bindParam(':product_id', $product_id);
+    $stmt->bindParam(':product_name', $product_name);
     $stmt->bindParam(':bill_id', $bill_id);
 
     $stmt->execute();
