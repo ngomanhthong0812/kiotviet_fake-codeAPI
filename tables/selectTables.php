@@ -2,9 +2,11 @@
 require "../dbConnect.php";
 
 try {
+    $shop_id = $_POST['shop_id'];
 
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $stmt = $conn->prepare('SELECT 
+	t.shop_id,
     t.user_id,
     t.id AS table_id,
     t.table_name,
@@ -14,6 +16,7 @@ try {
     o.id AS order_id
 FROM
     tables t
+    
 LEFT JOIN
     orders o ON t.id = o.table_id
 LEFT JOIN 
@@ -25,13 +28,21 @@ LEFT JOIN
     GROUP BY 
         order_id
     ) AS oi ON o.id = oi.order_id
+    
+WHERE t.shop_id = :shop_id
 GROUP BY
     t.id, t.table_name, t.status, o.id;
+   
+
 ');
+
+
+    $stmt->bindParam(':shop_id', $shop_id);
     $stmt->execute();
     $mang = array();
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $shop_id = $row['shop_id'];
         $user_id = $row['user_id'];
         $table_id = $row['table_id'];
         $table_name = $row['table_name'];
@@ -40,7 +51,7 @@ GROUP BY
         $product_quantity = $row['product_quantity'];
         $order_id = $row['order_id'];
 
-        array_push($mang, new Tables($user_id, $table_id, $table_name, $status, $table_price, $product_quantity, $order_id));
+        array_push($mang, new Tables($shop_id, $user_id, $table_id, $table_name, $status, $table_price, $product_quantity, $order_id));
     }
 
     echo json_encode($mang);
@@ -50,6 +61,7 @@ GROUP BY
 
 class Tables
 {
+    public $shop_id;
     public $user_id;
     public $table_id;
     public $table_name;
@@ -58,8 +70,9 @@ class Tables
     public $product_quantity;
     public $order_id;
 
-    public function __construct($user_id, $table_id, $table_name, $status, $table_price, $product_quantity, $order_id)
+    public function __construct($shop_id, $user_id, $table_id, $table_name, $status, $table_price, $product_quantity, $order_id)
     {
+        $this->shop_id = $shop_id;
         $this->user_id = $user_id;
         $this->table_id = $table_id;
         $this->table_name = $table_name;
